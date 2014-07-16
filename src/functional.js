@@ -6,43 +6,30 @@ function createMultiplier(num){
     return retval;
 }
 
+
+function invokeFuncWithBoundedArgs(args){
+    return function (func){
+        return (typeof func == 'function')? func.apply(null, args) : true;
+    };
+}
+
+
 function createAllOfFilter(arr){
     return function filter() {
-        if (!arr) {
-            return true;
-        }
-        for (var i = 0; i < arr.length; i++) {
-            if (typeof(arr[i]) == 'function') {
-                var func = arr[i];
-                var callResult = func.apply(null, arguments);
-                if (!callResult) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return _.every(arr, invokeFuncWithBoundedArgs(arguments));
     }
 }
 
-function passAll(element, filtersArr){
-    for(var i=0; i<filtersArr.length; i++){
-        if (filtersArr[i](element) != true){
-            return false;
-        }
-    }
-    return true;
+function combineMultipleFilters(filters){
+    return function (val){
+        return _.every(filters, function (filter){
+            return filter(val);
+        });
+    };
 }
 
 function transformArray(originalArr, filtersArr, modifierFunc){
-    var retval = [];
-    for( var i=0; i<originalArr.length; i++){
-        var elem = originalArr[i];
-        if(passAll(elem, filtersArr)){
-            if (modifierFunc){
-                elem = modifierFunc(elem);
-            }
-            retval.push(elem);
-        }
-    }
-    return retval;
+    var combinedFilter = combineMultipleFilters(filtersArr);
+    var filteredArr = _.filter(originalArr, combinedFilter);
+    return _.map(filteredArr, modifierFunc);
 }
