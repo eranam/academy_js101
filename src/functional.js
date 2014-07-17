@@ -1,3 +1,5 @@
+'use strict';
+
 function createMultiplier(num){
     var retval = function multiplire(multiplierNum){
         return num * multiplierNum;
@@ -16,13 +18,13 @@ function invokeFuncWithBoundedArgs(args){
 
 function createAllOfFilter(arr){
     return function filter() {
-        return _.every(arr, invokeFuncWithBoundedArgs(arguments));
+        return (!arr)? true : arr.every(invokeFuncWithBoundedArgs(arguments));
     }
 }
 
 function combineMultipleFilters(filters){
     return function (val){
-        return _.every(filters, function (filter){
+        return filters.every(function (filter){
             return filter(val);
         });
     };
@@ -30,6 +32,6 @@ function combineMultipleFilters(filters){
 
 function transformArray(originalArr, filtersArr, modifierFunc){
     var combinedFilter = combineMultipleFilters(filtersArr);
-    var filteredArr = _.filter(originalArr, combinedFilter);
-    return _.map(filteredArr, modifierFunc);
+    var filteredArr = originalArr.filter(combinedFilter);
+    return (typeof modifierFunc == 'undefined')? filteredArr : filteredArr.map(modifierFunc);
 }

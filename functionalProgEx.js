@@ -56,5 +56,5 @@ function printTree(tree) {
 }
 
 var tree = new BTree();
-_.forEach(randElementsArr, _.partial(insertNode,tree));
+randElementsArr.forEach(insertNode.bind(undefined,tree));
 printTree(tree);
