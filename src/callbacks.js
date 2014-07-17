@@ -50,7 +50,7 @@ EventEmitter.prototype.removeListener = function removeListener(eventName, func)
 
 function ApproxyPi() {
     this.pi = 0;
-    this.percision = 0;
+    this.precision = 0;
     this.iterationNum = 0;
 }
 
@@ -66,23 +66,22 @@ ApproxyPi.prototype.calc = function calcPi(precisionDigitIndex) {
     var maxPrecision = Math.pow(10, -precisionDigitIndex);
 
     function calcSingleBulk() {
-        var increment,
-            currPrecision = Math.pow(10, -that.percision),
-            absIncrement = 1;
+        var absIncrement = 1,
+            currPrecision = Math.pow(10, -that.precision);
 
         for (var i = 0; i < 1000 && absIncrement >= maxPrecision; i++) {
-            increment = ApproxyPi.getSeriesItem(that.iterationNum);
+            var increment = ApproxyPi.getSeriesItem(that.iterationNum);
             that.pi += increment;
             that.iterationNum++;
 
             absIncrement = Math.abs(increment);
             while (absIncrement < currPrecision) {
-                that.percision++;
-                currPrecision = Math.pow(10, -that.percision);
+                that.precision++;
+                currPrecision = Math.pow(10, -that.precision);
             }
         }
 
-        if (that.percision < precisionDigitIndex) {
+        if (that.precision < precisionDigitIndex) {
             that.emit('progress');
             setTimeout(calcSingleBulk, 1);
         } else {
