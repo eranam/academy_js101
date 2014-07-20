@@ -33,5 +33,5 @@ function combineMultipleFilters(filters){
 function transformArray(originalArr, filtersArr, modifierFunc){
     var combinedFilter = combineMultipleFilters(filtersArr);
     var filteredArr = originalArr.filter(combinedFilter);
-    return (typeof modifierFunc == 'undefined')? filteredArr : filteredArr.map(modifierFunc);
+    return (!modifierFunc)? filteredArr : filteredArr.map(modifierFunc);
 }

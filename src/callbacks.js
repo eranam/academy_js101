@@ -6,11 +6,8 @@ function EventEmitter() {
 }
 
 function addCallbacksToDest(dest, eventName, func) {
-    if (eventName in dest) {
-        dest[eventName].push(func);
-    } else {
-        dest[eventName] = [func];
-    }
+    dest[eventName] = dest[eventName] || [];
+    dest[eventName].push(func);
 }
 
 EventEmitter.prototype.addListener = function addListener(eventName, func) {
@@ -39,7 +36,7 @@ EventEmitter.prototype.emit = function emit(eventName, data) {
 function removeElementFromArray(arr, element) {
     if (arr) {
         var indx = arr.indexOf(element);
-        delete arr[indx];
+        arr.splice(indx, 1);
     }
 }
 
